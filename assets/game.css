@@ -1,0 +1,139 @@
+/* Game page. Tokens and base styles are in common.css. */
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Header: the gear sits in the right column */
+header { grid-template-columns: 44px 1fr 44px; }
+h1 { grid-column: 2; }
+.small-btn {
+  min-width: 44px; height: 44px; padding: 0 10px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  font: inherit; font-size: .85rem; white-space: nowrap; cursor: pointer;
+}
+.gear-btn {
+  display: grid; place-items: center; width: 44px; height: 44px; padding: 0;
+  border: 0; border-radius: 8px; background: none; color: var(--muted); cursor: pointer;
+}
+.gear-btn:hover { color: var(--text); }
+
+/* Settings popover, pinned under the header's right edge */
+#settings {
+  inset: auto; top: 64px; right: max(16px, calc((100vw - 32rem) / 2 + 16px)); margin: 0;
+  width: 17rem; padding: 8px 16px;
+  border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text);
+  box-shadow: 0 4px 16px rgb(0 0 0 / .2);
+}
+#settings h2 { margin: 4px 0; font-size: .8rem; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+.setting {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 44px; cursor: pointer;
+}
+.setting + .setting { border-top: 1px solid var(--border); }
+.switch {
+  appearance: none; flex: none; position: relative; width: 40px; height: 24px; margin: 0;
+  border-radius: 12px; background: var(--border); cursor: pointer; transition: background .15s;
+}
+.switch::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px;
+  border-radius: 50%; background: #fff; transition: transform .15s;
+}
+.switch:checked { background: var(--green); }
+.switch:checked::after { transform: translateX(16px); }
+
+/* Clue */
+main { padding: 16px 16px 96px; }
+.date { margin: 0 0 16px; color: var(--muted); text-align: center; }
+.clue { text-align: center; margin: 0 0 24px; }
+.clue-label {
+  margin: 0; font-size: .8rem; text-transform: uppercase; letter-spacing: .12em; color: var(--muted);
+}
+.clue-text { margin: 4px 0 0; font-size: 1.6rem; font-weight: 700; line-height: 1.25; }
+
+/* Guess rows: tiles, empty slots and inputs share one shape */
+.row {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin: 0 0 10px; min-height: 52px;
+}
+#board { list-style: none; margin: 0 0 16px; padding: 0; }
+.fn { color: var(--muted); font-style: italic; }
+.slot, .tile, .word-input {
+  flex: 1 1 0; min-width: 0; max-width: 11rem; height: 52px;
+  border-radius: 8px; font: inherit; font-weight: 700; font-size: 1.05rem;
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.slot { border: 2px dashed var(--border); }
+.tile {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 0 8px; overflow: hidden;
+}
+.tile-word { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tile-icon { font-size: .95rem; flex: none; }
+.tile.green  { background: var(--green);  color: var(--on-green); }
+.tile.lime   { background: var(--lime);   color: var(--on-lime); }
+.tile.yellow { background: var(--yellow); color: var(--on-yellow); }
+.tile.grey   { background: var(--grey);   color: var(--on-grey); }
+.tile.new { animation: pop .35s ease-out both; }
+.tile.new + .fn + .tile.new { animation-delay: .15s; }
+@keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Guess form */
+form { margin: 0; }
+.word-input {
+  padding: 0 10px; text-align: center; color: var(--text); background: var(--surface);
+  border: 2px solid var(--border);
+}
+.word-input:focus-visible { outline: none; border-color: var(--focus); box-shadow: 0 0 0 2px var(--focus); }
+.word-input::placeholder { color: var(--muted); font-weight: 400; text-transform: none; letter-spacing: 0; }
+.word-input:focus::placeholder { color: transparent; }
+.submit {
+  display: block; width: 100%; max-width: 23rem; height: 48px; margin: 6px auto 0;
+  border: 0; border-radius: 8px; background: var(--text); color: var(--bg);
+  font: inherit; font-weight: 700; cursor: pointer;
+}
+.tries { text-align: center; color: var(--muted); margin: 10px 0 0; }
+#status { text-align: center; min-height: 1.5em; margin: 8px 0 0; font-weight: 600; }
+
+/* Result */
+#result { text-align: center; margin-top: 16px; }
+#result h2 { margin: 0 0 12px; font-size: 1.3rem; }
+.stats { display: flex; justify-content: center; gap: 20px; margin: 0 0 16px; padding: 0; }
+.stats div { display: flex; flex-direction: column-reverse; }
+.stats dt { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.stats dd { margin: 0; font-size: 1.5rem; font-weight: 700; }
+.share {
+  height: 48px; padding: 0 28px; border: 0; border-radius: 24px;
+  background: var(--green); color: var(--on-green); font: inherit; font-weight: 700; cursor: pointer;
+}
+nav { text-align: center; margin-top: 28px; }
+.byline { margin: 12px 0 0; }
+#reset-btn { display: block; margin: 16px auto 0; }
+#reset-btn[hidden] { display: none; }
+
+/* Help */
+#help-btn {
+  position: fixed; right: 16px; bottom: 16px; width: 52px; height: 52px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  font: inherit; font-size: 1.4rem; font-weight: 700; cursor: pointer;
+  box-shadow: 0 2px 8px rgb(0 0 0 / .2);
+}
+dialog {
+  width: min(30rem, calc(100% - 32px)); max-height: calc(100% - 32px); padding: 20px;
+  border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text);
+}
+dialog::backdrop { background: rgb(0 0 0 / .5); }
+dialog h2 { margin: 0 0 8px; font-size: 1.3rem; }
+dialog h3 { margin: 16px 0 6px; font-size: 1rem; }
+dialog p, dialog ul { margin: 0 0 10px; }
+.example { margin: 0 0 6px; }
+.example .tile { flex: 0 1 8rem; height: 40px; font-size: .9rem; }
+.key { list-style: none; padding: 0; }
+.key li { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.key .tile { flex: 0 0 4.5rem; height: 36px; font-size: .85rem; }
+.close { float: right; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tile.new { animation: none; }
+}

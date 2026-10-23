@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spoonernym · Past puzzles</title>
+  <link rel="icon" href="../assets/favicon.svg">
+  <link rel="stylesheet" href="../assets/common.css">
+  <script src="../assets/theme.js"></script>
+  <style>
+    /* Archive page. Tokens and base styles are in common.css. */
+    header { grid-template-columns: 1fr auto 1fr; }
+    .back { justify-self: start; display: flex; align-items: center; min-height: 44px; white-space: nowrap; }
+    @media (max-width: 360px) { h1 { font-size: 1.2rem; } .back { font-size: .9rem; } }
+    main { padding: 16px 16px 48px; }
+    .summary { margin: 0 0 20px; color: var(--muted); text-align: center; }
+
+    /* Calendar */
+    .month-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 0 5px; }
+    .month-nav h2 { margin: 0; font-size: 1.15rem; }
+    .nav-btn {
+      min-width: 44px; height: 44px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      font: inherit; font-size: 1.3rem; line-height: 1; cursor: pointer;
+    }
+    .nav-btn:disabled { opacity: .35; cursor: default; }
+    .month { width: 100%; margin: 0 0 20px; border-collapse: separate; border-spacing: 5px; table-layout: fixed; }
+    .month th {
+      font-size: .72rem; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: .04em; padding-bottom: 2px;
+    }
+    .month td { padding: 0; }
+    .day {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      aspect-ratio: 1; border-radius: 8px; line-height: 1.1;
+      font-weight: 700; color: var(--text); text-decoration: none;
+    }
+    .day-mark { font-size: .7rem; font-weight: 600; }
+    .day.no-puzzle { color: var(--muted); font-weight: 400; opacity: .55; }
+    .day.unplayed { background: var(--surface); border: 2px solid var(--border); }
+    .day.playing  { background: var(--surface); border: 2px solid var(--yellow); }
+    .day.won      { background: var(--green); color: var(--on-green); }
+    .day.lost     { background: var(--grey);  color: var(--on-grey); }
+    .day.latest   { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--text); }
+    a.day:hover   { filter: brightness(1.1); }
+
+    .legend {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 16px;
+      list-style: none; margin: 0 0 24px; padding: 0; font-size: .85rem; color: var(--muted);
+    }
+    .legend li { display: flex; align-items: center; gap: 6px; }
+    .legend .day { width: 1.4rem; font-size: .7rem; }
+    .legend .latest { margin: 0 4px; }
+    .byline { margin: 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="back" href="../index.html" aria-label="Today's puzzle">‹ Today</a>
+    <h1>Past puzzles</h1>
+  </header>
+
+  <main>
+    <p class="summary" id="summary"></p>
+    <div class="month-nav">
+      <button type="button" class="nav-btn" id="prev-month" aria-label="Previous month">‹</button>
+      <h2 id="month-title" aria-live="polite"></h2>
+      <button type="button" class="nav-btn" id="next-month" aria-label="Next month">›</button>
+    </div>
+    <div id="calendar"></div>
+    <ul class="legend" aria-label="Key">
+      <li><span class="day won" aria-hidden="true">✓</span> Won (tries)</li>
+      <li><span class="day lost" aria-hidden="true">✗</span> Lost</li>
+      <li><span class="day playing" aria-hidden="true">…</span> In progress</li>
+      <li><span class="day unplayed" aria-hidden="true"></span> Not played</li>
+      <li><span class="day unplayed latest" aria-hidden="true"></span> Latest</li>
+    </ul>
+    <p class="byline">By flapjack</p>
+  </main>
+
+  <script id="archive" type="application/json">{"dates": ["2026-10-13", "2026-10-14", "2026-10-15", "2026-10-16", "2026-10-17", "2026-10-18", "2026-10-19", "2026-10-20", "2026-10-21", "2026-10-22", "2026-10-23"]}</script>
+  <script>
+  "use strict";
+
+  // Written by build.py: published puzzle dates, oldest first.
+  const { dates } = JSON.parse(document.getElementById("archive").textContent);
+  const published = new Set(dates);
+  const latest = dates[dates.length - 1];
+
+  const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const MAX_TRIES = 3;
+
+  // ---- Progress saved by the game pages ----
+
+  function load(key) {
+    try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
+  }
+
+  const results = load("spoonernym:results") || {};  // date -> tries used, 0 for a loss
+
+  // "won" | "lost" | "playing" | "unplayed"
+  function statusOf(date) {
+    if (date in results) return results[date] > 0 ? "won" : "lost";
+    const guesses = load(`spoonernym:game:${date}`);
+    return Array.isArray(guesses) && guesses.length ? "playing" : "unplayed";
+  }
+
+  // ---- Dates (UTC throughout so a day never shifts with the viewer's timezone) ----
+
+  const pad = n => String(n).padStart(2, "0");
+  const isoDate = (year, month, day) => `${year}-${pad(month)}-${pad(day)}`;
+  const longDate = date => new Date(`${date}T00:00:00Z`).toLocaleDateString(undefined,
+    { weekday: "long", month: "long", day: "numeric", timeZone: "UTC" });
+
+  // ["2026-10", ...], newest first
+  function monthsWithPuzzles() {
+    return [...new Set(dates.map(d => d.slice(0, 7)))].sort().reverse();
+  }
+
+  function monthName(yearMonth) {
+    const [year, month] = yearMonth.split("-").map(Number);
+    return new Date(Date.UTC(year, month - 1, 1))
+      .toLocaleDateString(undefined, { month: "long", year: "numeric", timeZone: "UTC" });
+  }
+
+  // ---- Rendering ----
+
+  const $ = id => document.getElementById(id);
+
+  function el(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text != null) node.textContent = text;
+    return node;
+  }
+
+  function dayCell(date, dayNumber) {
+    if (!published.has(date)) {
+      const cell = el("span", "day no-puzzle", dayNumber);
+      cell.setAttribute("aria-hidden", "true");
+      return cell;
+    }
+    const status = statusOf(date);
+    const mark = { won: `✓ ${results[date]}`, lost: "✗", playing: "…", unplayed: "" }[status];
+    const description = {
+      won: `won in ${results[date]} of ${MAX_TRIES}`,
+      lost: "lost",
+      playing: "in progress",
+      unplayed: "not played yet",
+    }[status];
+    const isLatest = date === latest;
+
+    const link = el("a", `day ${status}${isLatest ? " latest" : ""}`);
+    link.href = isLatest ? "../index.html" : `${date}.html`;
+    link.setAttribute("aria-label", `${longDate(date)}${isLatest ? " (latest)" : ""}: ${description}`);
+    link.append(el("span", null, dayNumber));
+    if (mark) link.append(el("span", "day-mark", mark));
+    return link;
+  }
+
+  function monthTable(yearMonth) {
+    const [year, month] = yearMonth.split("-").map(Number);
+    const firstWeekday = new Date(Date.UTC(year, month - 1, 1)).getUTCDay();
+    const daysInMonth = new Date(Date.UTC(year, month, 0)).getUTCDate();
+
+    const table = el("table", "month");
+    table.setAttribute("aria-labelledby", "month-title");
+
+    const headRow = table.createTHead().insertRow();
+    for (const name of WEEKDAYS) {
+      const th = el("th", null, name);
+      th.scope = "col";
+      headRow.append(th);
+    }
+
+    // Blank cells before the 1st and after the last day, 7 to a row. Always 6 rows
+    // so the page doesn't jump when switching months.
+    const body = table.createTBody();
+    const cells = Array.from({ length: firstWeekday }, () => el("td"));
+    for (let day = 1; day <= daysInMonth; day++) {
+      const td = el("td");
+      td.append(dayCell(isoDate(year, month, day), day));
+      cells.push(td);
+    }
+    while (cells.length < 42) cells.push(el("td"));
+    for (let i = 0; i < cells.length; i += 7) body.insertRow().append(...cells.slice(i, i + 7));
+    return table;
+  }
+
+  function summaryText() {
+    const statuses = dates.map(statusOf);
+    const finished = statuses.filter(s => s === "won" || s === "lost").length;
+    const won = statuses.filter(s => s === "won").length;
+    if (!finished) return `${dates.length} puzzles so far. Pick a day to play.`;
+    return `You've finished ${finished} of ${dates.length} puzzles and won ${won}.`;
+  }
+
+  // ---- Month navigation ----
+
+  const months = monthsWithPuzzles();  // newest first
+  // Start on the month in the URL (e.g. #2026-10), else the newest.
+  let shown = Math.max(0, months.indexOf(location.hash.slice(1)));
+
+  function showMonth(index) {
+    shown = index;
+    const yearMonth = months[shown];
+    $("month-title").textContent = monthName(yearMonth);
+    $("calendar").replaceChildren(monthTable(yearMonth));
+
+    const prev = $("prev-month"), next = $("next-month");
+    prev.disabled = shown === months.length - 1;
+    next.disabled = shown === 0;
+    // Don't strand keyboard focus on a button that just became disabled.
+    if (document.activeElement === prev && prev.disabled) next.focus();
+    if (document.activeElement === next && next.disabled) prev.focus();
+
+    // Keep the month in the URL so reloading or going back to this page returns here.
+    history.replaceState(null, "", shown === 0 ? location.pathname : `#${yearMonth}`);
+  }
+
+  $("prev-month").addEventListener("click", () => showMonth(shown + 1));
+  $("next-month").addEventListener("click", () => showMonth(shown - 1));
+
+  $("summary").textContent = summaryText();
+  showMonth(shown);
+  </script>
+</body>
+</html>
