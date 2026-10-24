@@ -31,18 +31,20 @@
     </section>
 
     <ol id="board" aria-label="Your guesses"></ol>
+    <p class="coach" id="coach" hidden></p>
 
     <form id="form" autocomplete="off" novalidate>
       <div class="row" id="input-row"></div>
       <button type="submit" class="submit">Guess</button>
     </form>
-    <p class="tries" id="tries"></p>
+    <p class="turn" id="turn"></p>
     <p id="status" role="status" aria-live="polite"></p>
 
     <section id="result" hidden aria-labelledby="result-title">
       <h2 id="result-title"></h2>
       <dl class="stats" id="stats"></dl>
       <button type="button" class="share" id="share">Share result</button>
+      <a class="share" id="next" hidden></a>
     </section>
 
     <nav id="nav"></nav>
@@ -57,7 +59,7 @@
     <p>The clue is a short phrase. Find a <strong>synonym</strong> for each of its two main words, so that
       swapping their opening sounds (a <strong>spoonerism</strong>) makes a different, common phrase.</p>
     <p>Enter that final phrase. The little words (<em>and</em>, <em>of</em>, <em>the</em>…) are filled in
-      for you. Spelling counts, and you get <strong>3 tries</strong>.</p>
+      for you. Spelling counts. Take as many guesses as you need: like golf, <strong>fewer is better</strong>.</p>
     <h3>Example</h3>
     <p class="example">Clue: <strong>Thief and babysitter</strong></p>
     <div class="row example" aria-label="Synonyms: crook and nanny">
@@ -78,9 +80,11 @@
       <li><span class="tile grey"><span class="tile-icon" aria-hidden="true">·</span></span> Not part of the puzzle</li>
     </ul>
     <p>A new puzzle every day.</p>
+    <p class="tutorial-link"><a id="tutorial-link" href="../tutorial/1.html">Try the tutorial</a></p>
   </dialog>
 
-  <script id="puzzle" type="application/json">{"date":"2026-10-23","clue":"Throwing humus","fn":[[],[],[]],"salt":"2026-10-23","answer":[["42545152ff5cb31b235764930888727d48d6e4d5d422f5db27a1a361fe0277ea"],["7feab8db0c2fab5ff9a555583be29e235e4b956aabf9b450887db26e9b4c1225"]],"mid":[["78739b78b8cb15fc27e896361da9e12f139e9c9241f43f69f846209c82d373ca"],["4f2aa1287706ddc965541afb94fb59b14c23eefaf3eea7b4afa69a5d486b9870"]],"root":"../","dev":false}</script>
+  <script id="puzzle" type="application/json">{"date":"2026-10-23","clue":"Throwing humus","fn":[[],[],[]],"salt":"2026-10-23","answer":[["42545152ff5cb31b235764930888727d48d6e4d5d422f5db27a1a361fe0277ea"],["7feab8db0c2fab5ff9a555583be29e235e4b956aabf9b450887db26e9b4c1225"]],"mid":[["78739b78b8cb15fc27e896361da9e12f139e9c9241f43f69f846209c82d373ca"],["4f2aa1287706ddc965541afb94fb59b14c23eefaf3eea7b4afa69a5d486b9870"]],"root":"../","dev":false,"tutorialSteps":3}</script>
+  <!--TUTORIAL_SCRIPT-->
   <script src="../assets/game.js"></script>
 </body>
 </html>

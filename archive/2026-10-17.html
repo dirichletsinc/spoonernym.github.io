@@ -31,18 +31,20 @@
     </section>
 
     <ol id="board" aria-label="Your guesses"></ol>
+    <p class="coach" id="coach" hidden></p>
 
     <form id="form" autocomplete="off" novalidate>
       <div class="row" id="input-row"></div>
       <button type="submit" class="submit">Guess</button>
     </form>
-    <p class="tries" id="tries"></p>
+    <p class="turn" id="turn"></p>
     <p id="status" role="status" aria-live="polite"></p>
 
     <section id="result" hidden aria-labelledby="result-title">
       <h2 id="result-title"></h2>
       <dl class="stats" id="stats"></dl>
       <button type="button" class="share" id="share">Share result</button>
+      <a class="share" id="next" hidden></a>
     </section>
 
     <nav id="nav"></nav>
@@ -57,7 +59,7 @@
     <p>The clue is a short phrase. Find a <strong>synonym</strong> for each of its two main words, so that
       swapping their opening sounds (a <strong>spoonerism</strong>) makes a different, common phrase.</p>
     <p>Enter that final phrase. The little words (<em>and</em>, <em>of</em>, <em>the</em>…) are filled in
-      for you. Spelling counts, and you get <strong>3 tries</strong>.</p>
+      for you. Spelling counts. Take as many guesses as you need: like golf, <strong>fewer is better</strong>.</p>
     <h3>Example</h3>
     <p class="example">Clue: <strong>Thief and babysitter</strong></p>
     <div class="row example" aria-label="Synonyms: crook and nanny">
@@ -78,9 +80,11 @@
       <li><span class="tile grey"><span class="tile-icon" aria-hidden="true">·</span></span> Not part of the puzzle</li>
     </ul>
     <p>A new puzzle every day.</p>
+    <p class="tutorial-link"><a id="tutorial-link" href="../tutorial/1.html">Try the tutorial</a></p>
   </dialog>
 
-  <script id="puzzle" type="application/json">{"date":"2026-10-17","clue":"Shortage of pastries","fn":[[],["of"],[]],"salt":"2026-10-17","answer":[["f16908923161294298ad09ce0f266ba8a0d3d1b035dd89811962f460247f5b83"],["68ee76405a2bfb0513c5d874c3dd77a967a52c574e245d580848a34bf759c477"]],"mid":[["27a0fd7a5de9cce592a6f3b31187c083a66939d1987d6221cf33254bb6062d41"],["79ed171ad5cbfd751199807a0a5983bf810364b206bde4ebb01ff839a800acda"]],"root":"../","dev":false}</script>
+  <script id="puzzle" type="application/json">{"date":"2026-10-17","clue":"Shortage of pastries","fn":[[],["of"],[]],"salt":"2026-10-17","answer":[["f16908923161294298ad09ce0f266ba8a0d3d1b035dd89811962f460247f5b83"],["68ee76405a2bfb0513c5d874c3dd77a967a52c574e245d580848a34bf759c477"]],"mid":[["27a0fd7a5de9cce592a6f3b31187c083a66939d1987d6221cf33254bb6062d41"],["79ed171ad5cbfd751199807a0a5983bf810364b206bde4ebb01ff839a800acda"]],"root":"../","dev":false,"tutorialSteps":3}</script>
+  <!--TUTORIAL_SCRIPT-->
   <script src="../assets/game.js"></script>
 </body>
 </html>

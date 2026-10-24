@@ -31,18 +31,20 @@
     </section>
 
     <ol id="board" aria-label="Your guesses"></ol>
+    <p class="coach" id="coach" hidden></p>
 
     <form id="form" autocomplete="off" novalidate>
       <div class="row" id="input-row"></div>
       <button type="submit" class="submit">Guess</button>
     </form>
-    <p class="tries" id="tries"></p>
+    <p class="turn" id="turn"></p>
     <p id="status" role="status" aria-live="polite"></p>
 
     <section id="result" hidden aria-labelledby="result-title">
       <h2 id="result-title"></h2>
       <dl class="stats" id="stats"></dl>
       <button type="button" class="share" id="share">Share result</button>
+      <a class="share" id="next" hidden></a>
     </section>
 
     <nav id="nav"></nav>
@@ -57,7 +59,7 @@
     <p>The clue is a short phrase. Find a <strong>synonym</strong> for each of its two main words, so that
       swapping their opening sounds (a <strong>spoonerism</strong>) makes a different, common phrase.</p>
     <p>Enter that final phrase. The little words (<em>and</em>, <em>of</em>, <em>the</em>…) are filled in
-      for you. Spelling counts, and you get <strong>3 tries</strong>.</p>
+      for you. Spelling counts. Take as many guesses as you need: like golf, <strong>fewer is better</strong>.</p>
     <h3>Example</h3>
     <p class="example">Clue: <strong>Thief and babysitter</strong></p>
     <div class="row example" aria-label="Synonyms: crook and nanny">
@@ -78,9 +80,11 @@
       <li><span class="tile grey"><span class="tile-icon" aria-hidden="true">·</span></span> Not part of the puzzle</li>
     </ul>
     <p>A new puzzle every day.</p>
+    <p class="tutorial-link"><a id="tutorial-link" href="../tutorial/1.html">Try the tutorial</a></p>
   </dialog>
 
-  <script id="puzzle" type="application/json">{"date":"2026-10-22","clue":"Audacious team","fn":[[],[],[]],"salt":"2026-10-22","answer":[["e532e272b677092bb7b353934b305fd85dcf67e14857b253bfb8f58985b206c4"],["94c42eb7df89ec8e087c542efcf3ad95842c062925db40cd84e7ab5a2bf736c8"]],"mid":[["5306e2a563520072333f666252900bc9ee0f4e4b5bdf57429e61371ad588d5ff"],["f99493d960bc6c47deb76e96ccb4a5fa38ab307e7e59ad6f65cee303b8b2cf1f"]],"root":"../","dev":false}</script>
+  <script id="puzzle" type="application/json">{"date":"2026-10-22","clue":"Audacious team","fn":[[],[],[]],"salt":"2026-10-22","answer":[["e532e272b677092bb7b353934b305fd85dcf67e14857b253bfb8f58985b206c4"],["94c42eb7df89ec8e087c542efcf3ad95842c062925db40cd84e7ab5a2bf736c8"]],"mid":[["5306e2a563520072333f666252900bc9ee0f4e4b5bdf57429e61371ad588d5ff"],["f99493d960bc6c47deb76e96ccb4a5fa38ab307e7e59ad6f65cee303b8b2cf1f"]],"root":"../","dev":false,"tutorialSteps":3}</script>
+  <!--TUTORIAL_SCRIPT-->
   <script src="../assets/game.js"></script>
 </body>
 </html>

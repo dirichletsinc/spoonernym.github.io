@@ -52,19 +52,20 @@ main { padding: 16px 16px 96px; }
 }
 .clue-text { margin: 4px 0 0; font-size: 1.6rem; font-weight: 700; line-height: 1.25; }
 
-/* Guess rows: tiles, empty slots and inputs share one shape */
+/* Guess rows: tiles and inputs share one shape */
 .row {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   margin: 0 0 10px; min-height: 52px;
 }
-#board { list-style: none; margin: 0 0 16px; padding: 0; }
+/* About 3.5 rows (52px + 10px gap each); older guesses scroll up out of view. */
+#board { list-style: none; margin: 0 0 16px; padding: 0; max-height: 217px; overflow-y: auto; }
+#board.scrolled { mask-image: linear-gradient(transparent, #000 24px); }
 .fn { color: var(--muted); font-style: italic; }
-.slot, .tile, .word-input {
+.tile, .word-input {
   flex: 1 1 0; min-width: 0; max-width: 11rem; height: 52px;
   border-radius: 8px; font: inherit; font-weight: 700; font-size: 1.05rem;
   text-transform: uppercase; letter-spacing: .04em;
 }
-.slot { border: 2px dashed var(--border); }
 .tile {
   display: flex; align-items: center; justify-content: center; gap: 6px;
   padding: 0 8px; overflow: hidden;
@@ -78,6 +79,12 @@ main { padding: 16px 16px 96px; }
 .tile.new { animation: pop .35s ease-out both; }
 .tile.new + .fn + .tile.new { animation-delay: .15s; }
 @keyframes pop { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* Tutorial coach */
+.coach {
+  margin: 0 0 16px; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface); line-height: 1.4;
+}
 
 /* Guess form */
 form { margin: 0; }
@@ -93,7 +100,7 @@ form { margin: 0; }
   border: 0; border-radius: 8px; background: var(--text); color: var(--bg);
   font: inherit; font-weight: 700; cursor: pointer;
 }
-.tries { text-align: center; color: var(--muted); margin: 10px 0 0; }
+.turn { text-align: center; color: var(--muted); margin: 10px 0 0; }
 #status { text-align: center; min-height: 1.5em; margin: 8px 0 0; font-weight: 600; }
 
 /* Result */
@@ -103,10 +110,13 @@ form { margin: 0; }
 .stats div { display: flex; flex-direction: column-reverse; }
 .stats dt { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
 .stats dd { margin: 0; font-size: 1.5rem; font-weight: 700; }
+.stats[hidden] { display: none; }
 .share {
   height: 48px; padding: 0 28px; border: 0; border-radius: 24px;
   background: var(--green); color: var(--on-green); font: inherit; font-weight: 700; cursor: pointer;
 }
+#next { display: inline-block; line-height: 48px; text-decoration: none; }
+#next[hidden] { display: none; }
 nav { text-align: center; margin-top: 28px; }
 .byline { margin: 12px 0 0; }
 #reset-btn { display: block; margin: 16px auto 0; }
@@ -133,6 +143,7 @@ dialog p, dialog ul { margin: 0 0 10px; }
 .key li { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .key .tile { flex: 0 0 4.5rem; height: 36px; font-size: .85rem; }
 .close { float: right; }
+.tutorial-link { margin-top: 14px; font-weight: 600; }
 
 @media (prefers-reduced-motion: reduce) {
   .tile.new { animation: none; }

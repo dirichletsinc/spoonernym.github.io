@@ -39,8 +39,7 @@
     .day.no-puzzle { color: var(--muted); font-weight: 400; opacity: .55; }
     .day.unplayed { background: var(--surface); border: 2px solid var(--border); }
     .day.playing  { background: var(--surface); border: 2px solid var(--yellow); }
-    .day.won      { background: var(--green); color: var(--on-green); }
-    .day.lost     { background: var(--grey);  color: var(--on-grey); }
+    .day.solved   { background: var(--green); color: var(--on-green); }
     .day.latest   { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--text); }
     a.day:hover   { filter: brightness(1.1); }
 
@@ -69,8 +68,7 @@
     </div>
     <div id="calendar"></div>
     <ul class="legend" aria-label="Key">
-      <li><span class="day won" aria-hidden="true">✓</span> Won (tries)</li>
-      <li><span class="day lost" aria-hidden="true">✗</span> Lost</li>
+      <li><span class="day solved" aria-hidden="true">3</span> Solved (guesses)</li>
       <li><span class="day playing" aria-hidden="true">…</span> In progress</li>
       <li><span class="day unplayed" aria-hidden="true"></span> Not played</li>
       <li><span class="day unplayed latest" aria-hidden="true"></span> Latest</li>
@@ -88,7 +86,6 @@
   const latest = dates[dates.length - 1];
 
   const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const MAX_TRIES = 3;
 
   // ---- Progress saved by the game pages ----
 
@@ -96,13 +93,17 @@
     try { return JSON.parse(localStorage.getItem(key)); } catch { return null; }
   }
 
-  const results = load("spoonernym:results") || {};  // date -> tries used, 0 for a loss
-
-  // "won" | "lost" | "playing" | "unplayed"
-  function statusOf(date) {
-    if (date in results) return results[date] > 0 ? "won" : "lost";
+  // date -> guesses used. 0s are losses from the old 3-try rules; those days count as in progress.
+  const results = load("spoonernym:results") || {};
+  const guessCount = date => {
     const guesses = load(`spoonernym:game:${date}`);
-    return Array.isArray(guesses) && guesses.length ? "playing" : "unplayed";
+    return Array.isArray(guesses) ? guesses.length : 0;
+  };
+
+  // "solved" | "playing" | "unplayed"
+  function statusOf(date) {
+    if (results[date] > 0) return "solved";
+    return guessCount(date) ? "playing" : "unplayed";
   }
 
   // ---- Dates (UTC throughout so a day never shifts with the viewer's timezone) ----
@@ -141,13 +142,13 @@
       return cell;
     }
     const status = statusOf(date);
-    const mark = { won: `✓ ${results[date]}`, lost: "✗", playing: "…", unplayed: "" }[status];
+    const mark = { solved: results[date], playing: "…", unplayed: "" }[status];
+    const plural = n => `${n} ${n === 1 ? "guess" : "guesses"}`;
     const description = {
-      won: `won in ${results[date]} of ${MAX_TRIES}`,
-      lost: "lost",
-      playing: "in progress",
-      unplayed: "not played yet",
-    }[status];
+      solved: () => `solved in ${plural(results[date])}`,
+      playing: () => `in progress, ${plural(guessCount(date))} so far`,
+      unplayed: () => "not played yet",
+    }[status]();
     const isLatest = date === latest;
 
     const link = el("a", `day ${status}${isLatest ? " latest" : ""}`);
@@ -188,11 +189,11 @@
   }
 
   function summaryText() {
-    const statuses = dates.map(statusOf);
-    const finished = statuses.filter(s => s === "won" || s === "lost").length;
-    const won = statuses.filter(s => s === "won").length;
-    if (!finished) return `${dates.length} puzzles so far. Pick a day to play.`;
-    return `You've finished ${finished} of ${dates.length} puzzles and won ${won}.`;
+    const puzzles = `${dates.length} ${dates.length === 1 ? "puzzle" : "puzzles"}`;
+    const solved = dates.filter(date => statusOf(date) === "solved");
+    if (!solved.length) return `${puzzles} so far. Pick a day to play.`;
+    const average = solved.reduce((sum, date) => sum + results[date], 0) / solved.length;
+    return `You've solved ${solved.length} of ${puzzles}, averaging ${average.toFixed(1)} guesses.`;
   }
 
   // ---- Month navigation ----
