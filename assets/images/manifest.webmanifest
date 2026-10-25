@@ -1,0 +1,15 @@
+{
+  "name": "Spoonernym",
+  "short_name": "Spoonernym",
+  "description": "A daily word puzzle of synonyms and spoonerisms.",
+  "start_url": "../../index.html",
+  "scope": "../../",
+  "display": "standalone",
+  "background_color": "#fafaf7",
+  "theme_color": "#fafaf7",
+  "icons": [
+    { "src": "icon-192.png?v=9a79b7a2", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png?v=cd35b8e8", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png?v=b0bac7e3", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -3,12 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fafaf7">
   <title>Spoonernym · 2026-10-14</title>
   <meta name="description" content="A daily word puzzle of synonyms and spoonerisms.">
-  <link rel="icon" href="../assets/favicon.svg?v=946979eb">
-  <link rel="stylesheet" href="../assets/common.css?v=ab677eda">
-  <link rel="stylesheet" href="../assets/game.css?v=6f6a8758">
-  <script src="../assets/theme.js?v=c8690cec"></script>
+  <link rel="icon" href="../assets/images/favicon.svg?v=946979eb">
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png?v=997ed763">
+  <link rel="manifest" href="../assets/images/manifest.webmanifest?v=403dd8ba">
+  <link rel="stylesheet" href="../assets/common.css?v=3e714fc5">
+  <link rel="stylesheet" href="../assets/game.css?v=9c2a2bc5">
+  <script src="../assets/common.js?v=825843c1"></script>
 </head>
 <body>
   <header>
@@ -17,14 +20,15 @@
       <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
   </header>
-  <div id="settings" popover aria-labelledby="settings-title">
+  <div id="settings" popover role="group" aria-labelledby="settings-title">
     <h2 id="settings-title">Settings</h2>
     <label class="setting">Dark mode <input type="checkbox" role="switch" class="switch" id="theme-toggle"></label>
-    <label class="setting">Colour-blind colours <input type="checkbox" role="switch" class="switch" id="cb-toggle"></label>
+    <label class="setting">Color-blind colors <input type="checkbox" role="switch" class="switch" id="cb-toggle"></label>
   </div>
 
   <main>
-    <p class="date"><time id="date"></time></p>
+    <noscript><p class="coach">Spoonernym needs JavaScript to play.</p></noscript>
+    <p class="date" id="date"></p>
     <section class="clue" aria-labelledby="clue-label">
       <p class="clue-label" id="clue-label">Clue</p>
       <p class="clue-text" id="clue"></p>
@@ -38,7 +42,7 @@
       <button type="submit" class="submit">Guess</button>
     </form>
     <p class="turn" id="turn"></p>
-    <p id="status" role="status" aria-live="polite"></p>
+    <p id="status" role="status"></p>
 
     <section id="result" hidden aria-labelledby="result-title">
       <h2 id="result-title"></h2>
@@ -62,29 +66,29 @@
       for you. Spelling counts. Take as many guesses as you need: like golf, <strong>fewer is better</strong>.</p>
     <h3>Example</h3>
     <p class="example">Clue: <strong>Thief and babysitter</strong></p>
-    <div class="row example" aria-label="Synonyms: crook and nanny">
+    <div class="row example" role="group" aria-label="Synonyms: crook and nanny">
       <span class="tile yellow"><span class="tile-word">crook</span><span class="tile-icon" aria-hidden="true">~</span></span>
       <span class="fn">and</span>
       <span class="tile yellow"><span class="tile-word">nanny</span><span class="tile-icon" aria-hidden="true">~</span></span>
     </div>
-    <div class="row example" aria-label="Spoonerism: nook and cranny">
+    <div class="row example" role="group" aria-label="Spoonerism: nook and cranny">
       <span class="tile green"><span class="tile-word">nook</span><span class="tile-icon" aria-hidden="true">✓</span></span>
       <span class="fn">and</span>
       <span class="tile green"><span class="tile-word">cranny</span><span class="tile-icon" aria-hidden="true">✓</span></span>
     </div>
-    <h3>Colours</h3>
+    <h3>Colors</h3>
     <ul class="key">
       <li><span class="tile green"><span class="tile-icon" aria-hidden="true">✓</span></span> Right word, right spot</li>
       <li><span class="tile lime"><span class="tile-icon" aria-hidden="true">⇄</span></span> Right word, wrong spot</li>
       <li><span class="tile yellow"><span class="tile-icon" aria-hidden="true">~</span></span> A synonym from the clue: you're on the right track</li>
-      <li><span class="tile grey"><span class="tile-icon" aria-hidden="true">·</span></span> Not part of the puzzle</li>
+      <li><span class="tile gray"><span class="tile-icon" aria-hidden="true">·</span></span> Not part of the puzzle</li>
     </ul>
     <p>A new puzzle every day.</p>
     <p class="tutorial-link"><a id="tutorial-link" href="../tutorial/1.html">Try the tutorial</a></p>
   </dialog>
 
-  <script id="puzzle" type="application/json">{"date":"2026-10-14","clue":"Tummy denims","fn":[[],[],[]],"salt":"2026-10-14","answer":[["20c57d3f3f4ef8f420c1b343592818f4456acf25a8327cdddafcf77f4074f614"],["10f3dc00964a51b5d99020c0faebd84d3f11a953360944216b08481ad4c27427"]],"mid":[["ec81843c809ffc83ecdba78ac0db2a39e3baf836833ffff4896acb485f07b69d"],["4751d51282426ea5dfaa0e940532e420dc6656332c7c11f4595670eae6634d4b"]],"root":"../","dev":false,"tutorialSteps":3}</script>
+  <script id="puzzle" type="application/json">{"date":"2026-10-14","clue":"Tummy denims","fn":[[],[],[]],"salt":"2026-10-14","answer":[["20c57d3f3f4ef8f420c1b343592818f4456acf25a8327cdddafcf77f4074f614"],["10f3dc00964a51b5d99020c0faebd84d3f11a953360944216b08481ad4c27427"]],"mid":[["ec81843c809ffc83ecdba78ac0db2a39e3baf836833ffff4896acb485f07b69d"],["4751d51282426ea5dfaa0e940532e420dc6656332c7c11f4595670eae6634d4b"]],"root":"../"}</script>
   <!--TUTORIAL_SCRIPT-->
-  <script src="../assets/game.js?v=156bf98e"></script>
+  <script src="../assets/game.js?v=f60a2e57"></script>
 </body>
 </html>
