@@ -1,8 +1,10 @@
 # Cloudflare Pages response headers; build.py copies this into _site/.
 # GitHub Pages (staging) ignores it.
 
+# Cloudflare Web Analytics injects a script from static.cloudflareinsights.com that
+# reports to cloudflareinsights.com.
 /*
-  Content-Security-Policy: default-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; object-src 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com; connect-src 'self' https://cloudflareinsights.com; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; object-src 'none'
   Referrer-Policy: strict-origin-when-cross-origin
   X-Content-Type-Options: nosniff
 

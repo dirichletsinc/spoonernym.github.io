@@ -6,12 +6,12 @@
   <meta name="theme-color" content="#fafaf7">
   <title>Spoonernym · 2026-10-22</title>
   <meta name="description" content="A daily word puzzle of synonyms and spoonerisms.">
-  <link rel="icon" href="../assets/images/favicon.svg?v=946979eb">
-  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png?v=997ed763">
-  <link rel="manifest" href="../assets/images/manifest.webmanifest?v=403dd8ba">
-  <link rel="stylesheet" href="../assets/common.css?v=3e714fc5">
-  <link rel="stylesheet" href="../assets/game.css?v=9c2a2bc5">
-  <script src="../assets/common.js?v=825843c1"></script>
+  <link rel="icon" href="../assets/images/favicon.svg?v=af4edbe7">
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png?v=492c8c70">
+  <link rel="manifest" href="../assets/images/manifest.webmanifest?v=e77b5e56">
+  <link rel="stylesheet" href="../assets/common.css?v=d9229ac1">
+  <link rel="stylesheet" href="../assets/game.css?v=bccfade9">
+  <script src="../assets/common.js?v=736e969c"></script>
 </head>
 <body>
   <header>
@@ -23,11 +23,10 @@
   <div id="settings" popover role="group" aria-labelledby="settings-title">
     <h2 id="settings-title">Settings</h2>
     <label class="setting">Dark mode <input type="checkbox" role="switch" class="switch" id="theme-toggle"></label>
-    <label class="setting">Color-blind colors <input type="checkbox" role="switch" class="switch" id="cb-toggle"></label>
   </div>
 
   <main>
-    <noscript><p class="coach">Spoonernym needs JavaScript to play.</p></noscript>
+    <noscript><p class="help-text">Spoonernym needs JavaScript to play.</p></noscript>
     <p class="date" id="date"></p>
     <section class="clue" aria-labelledby="clue-label">
       <p class="clue-label" id="clue-label">Clue</p>
@@ -35,17 +34,20 @@
     </section>
 
     <ol id="board" aria-label="Your guesses"></ol>
-    <p class="coach" id="coach" hidden></p>
+    <p class="help-text" id="help-text" hidden></p>
 
     <form id="form" autocomplete="off" novalidate>
       <div class="row" id="input-row"></div>
-      <button type="submit" class="submit">Guess</button>
+      <button type="submit" class="submit" id="submit">Guess</button>
     </form>
-    <p class="turn" id="turn"></p>
+    <button type="button" class="small-btn hint-btn" id="hint-btn" hidden>Reveal hint</button>
+    <p class="help-text hint" id="hint" hidden></p>
     <p id="status" role="status"></p>
+    <p class="sr-only" id="sr-status" role="status"></p>
 
     <section id="result" hidden aria-labelledby="result-title">
       <h2 id="result-title"></h2>
+      <p class="result-detail" id="result-detail"></p>
       <dl class="stats" id="stats"></dl>
       <button type="button" class="share" id="share">Share result</button>
       <a class="share" id="next" hidden></a>
@@ -64,31 +66,34 @@
       swapping their opening sounds (a <strong>spoonerism</strong>) makes a different, common phrase.</p>
     <p>Enter that final phrase. The little words (<em>and</em>, <em>of</em>, <em>the</em>…) are filled in
       for you. Spelling counts. Take as many guesses as you need: like golf, <strong>fewer is better</strong>.</p>
+    <p>Each puzzle has a <strong>par</strong>, and a spoon to match: Teaspoon is par 1, Tablespoon 2, Scoop 3–4,
+      Ladle 5–7 and Dipper 8 or more.</p>
+    <p>Stuck? Some puzzles offer a hint after your first guess. It doesn't count against you.</p>
     <h3>Example</h3>
     <p class="example">Clue: <strong>Thief and babysitter</strong></p>
     <div class="row example" role="group" aria-label="Synonyms: crook and nanny">
-      <span class="tile yellow"><span class="tile-word">crook</span><span class="tile-icon" aria-hidden="true">~</span></span>
+      <span class="tile orange"><span class="tile-word">crook</span><span class="tile-icon" aria-hidden="true">~</span></span>
       <span class="fn">and</span>
-      <span class="tile yellow"><span class="tile-word">nanny</span><span class="tile-icon" aria-hidden="true">~</span></span>
+      <span class="tile orange"><span class="tile-word">nanny</span><span class="tile-icon" aria-hidden="true">~</span></span>
     </div>
     <div class="row example" role="group" aria-label="Spoonerism: nook and cranny">
-      <span class="tile green"><span class="tile-word">nook</span><span class="tile-icon" aria-hidden="true">✓</span></span>
+      <span class="tile blue"><span class="tile-word">nook</span><span class="tile-icon" aria-hidden="true">✓</span></span>
       <span class="fn">and</span>
-      <span class="tile green"><span class="tile-word">cranny</span><span class="tile-icon" aria-hidden="true">✓</span></span>
+      <span class="tile blue"><span class="tile-word">cranny</span><span class="tile-icon" aria-hidden="true">✓</span></span>
     </div>
     <h3>Colors</h3>
     <ul class="key">
-      <li><span class="tile green"><span class="tile-icon" aria-hidden="true">✓</span></span> Right word, right spot</li>
-      <li><span class="tile lime"><span class="tile-icon" aria-hidden="true">⇄</span></span> Right word, wrong spot</li>
-      <li><span class="tile yellow"><span class="tile-icon" aria-hidden="true">~</span></span> A synonym from the clue: you're on the right track</li>
+      <li><span class="tile blue"><span class="tile-icon" aria-hidden="true">✓</span></span> Right word, right spot</li>
+      <li><span class="tile light-blue"><span class="tile-icon" aria-hidden="true">⇄</span></span> Right word, wrong spot</li>
+      <li><span class="tile orange"><span class="tile-icon" aria-hidden="true">~</span></span> A synonym from the clue: you're on the right track</li>
       <li><span class="tile gray"><span class="tile-icon" aria-hidden="true">·</span></span> Not part of the puzzle</li>
     </ul>
     <p>A new puzzle every day.</p>
     <p class="tutorial-link"><a id="tutorial-link" href="../tutorial/1.html">Try the tutorial</a></p>
   </dialog>
 
-  <script id="puzzle" type="application/json">{"date":"2026-10-22","clue":"Audacious team","fn":[[],[],[]],"salt":"2026-10-22","answer":[["e532e272b677092bb7b353934b305fd85dcf67e14857b253bfb8f58985b206c4"],["94c42eb7df89ec8e087c542efcf3ad95842c062925db40cd84e7ab5a2bf736c8"]],"mid":[["5306e2a563520072333f666252900bc9ee0f4e4b5bdf57429e61371ad588d5ff"],["f99493d960bc6c47deb76e96ccb4a5fa38ab307e7e59ad6f65cee303b8b2cf1f"]],"root":"../"}</script>
+  <script id="puzzle" type="application/json">{"date":"2026-10-22","clue":"Audacious team","fn":[[],[],[]],"salt":"2026-10-22","answer":[["e532e272b677092bb7b353934b305fd85dcf67e14857b253bfb8f58985b206c4"],["94c42eb7df89ec8e087c542efcf3ad95842c062925db40cd84e7ab5a2bf736c8"]],"mid":[["5306e2a563520072333f666252900bc9ee0f4e4b5bdf57429e61371ad588d5ff"],["f99493d960bc6c47deb76e96ccb4a5fa38ab307e7e59ad6f65cee303b8b2cf1f"]],"hint":"These hints are bad. Please don't roast me.","par":4,"root":"../"}</script>
   <!--TUTORIAL_SCRIPT-->
-  <script src="../assets/game.js?v=6654e7b4"></script>
+  <script src="../assets/game.js?v=46b94efa"></script>
 </body>
 </html>

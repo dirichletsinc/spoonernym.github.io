@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fafaf7">
+  <title>Spoonernym · 2026-10-27</title>
+  <meta name="description" content="A daily word puzzle of synonyms and spoonerisms.">
+  <link rel="icon" href="../assets/images/favicon.svg?v=af4edbe7">
+  <link rel="apple-touch-icon" href="../assets/images/apple-touch-icon.png?v=492c8c70">
+  <link rel="manifest" href="../assets/images/manifest.webmanifest?v=e77b5e56">
+  <link rel="stylesheet" href="../assets/common.css?v=d9229ac1">
+  <link rel="stylesheet" href="../assets/game.css?v=bccfade9">
+  <script src="../assets/common.js?v=736e969c"></script>
+</head>
+<body>
+  <header>
+    <h1>Spoonernym</h1>
+    <button type="button" class="gear-btn" popovertarget="settings" aria-label="Settings">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+  </header>
+  <div id="settings" popover role="group" aria-labelledby="settings-title">
+    <h2 id="settings-title">Settings</h2>
+    <label class="setting">Dark mode <input type="checkbox" role="switch" class="switch" id="theme-toggle"></label>
+  </div>
+
+  <main>
+    <noscript><p class="help-text">Spoonernym needs JavaScript to play.</p></noscript>
+    <p class="date" id="date"></p>
+    <section class="clue" aria-labelledby="clue-label">
+      <p class="clue-label" id="clue-label">Clue</p>
+      <p class="clue-text" id="clue"></p>
+    </section>
+
+    <ol id="board" aria-label="Your guesses"></ol>
+    <p class="help-text" id="help-text" hidden></p>
+
+    <form id="form" autocomplete="off" novalidate>
+      <div class="row" id="input-row"></div>
+      <button type="submit" class="submit" id="submit">Guess</button>
+    </form>
+    <button type="button" class="small-btn hint-btn" id="hint-btn" hidden>Reveal hint</button>
+    <p class="help-text hint" id="hint" hidden></p>
+    <p id="status" role="status"></p>
+    <p class="sr-only" id="sr-status" role="status"></p>
+
+    <section id="result" hidden aria-labelledby="result-title">
+      <h2 id="result-title"></h2>
+      <p class="result-detail" id="result-detail"></p>
+      <dl class="stats" id="stats"></dl>
+      <button type="button" class="share" id="share">Share result</button>
+      <a class="share" id="next" hidden></a>
+    </section>
+
+    <nav id="nav"></nav>
+    <p class="byline">By flapjack</p>
+    <button type="button" class="small-btn" id="reset-btn" hidden>Reset my stats (dev)</button>
+  </main>
+
+  <button type="button" id="help-btn" aria-label="How to play" aria-haspopup="dialog">?</button>
+  <dialog id="help" aria-labelledby="help-title">
+    <button type="button" class="small-btn close" id="help-close" aria-label="Close">✕</button>
+    <h2 id="help-title">How to play</h2>
+    <p>The clue is a short phrase. Find a <strong>synonym</strong> for each of its two main words, so that
+      swapping their opening sounds (a <strong>spoonerism</strong>) makes a different, common phrase.</p>
+    <p>Enter that final phrase. The little words (<em>and</em>, <em>of</em>, <em>the</em>…) are filled in
+      for you. Spelling counts. Take as many guesses as you need: like golf, <strong>fewer is better</strong>.</p>
+    <p>Each puzzle has a <strong>par</strong>, and a spoon to match: Teaspoon is par 1, Tablespoon 2, Scoop 3–4,
+      Ladle 5–7 and Dipper 8 or more.</p>
+    <p>Stuck? Some puzzles offer a hint after your first guess. It doesn't count against you.</p>
+    <h3>Example</h3>
+    <p class="example">Clue: <strong>Thief and babysitter</strong></p>
+    <div class="row example" role="group" aria-label="Synonyms: crook and nanny">
+      <span class="tile orange"><span class="tile-word">crook</span><span class="tile-icon" aria-hidden="true">~</span></span>
+      <span class="fn">and</span>
+      <span class="tile orange"><span class="tile-word">nanny</span><span class="tile-icon" aria-hidden="true">~</span></span>
+    </div>
+    <div class="row example" role="group" aria-label="Spoonerism: nook and cranny">
+      <span class="tile blue"><span class="tile-word">nook</span><span class="tile-icon" aria-hidden="true">✓</span></span>
+      <span class="fn">and</span>
+      <span class="tile blue"><span class="tile-word">cranny</span><span class="tile-icon" aria-hidden="true">✓</span></span>
+    </div>
+    <h3>Colors</h3>
+    <ul class="key">
+      <li><span class="tile blue"><span class="tile-icon" aria-hidden="true">✓</span></span> Right word, right spot</li>
+      <li><span class="tile light-blue"><span class="tile-icon" aria-hidden="true">⇄</span></span> Right word, wrong spot</li>
+      <li><span class="tile orange"><span class="tile-icon" aria-hidden="true">~</span></span> A synonym from the clue: you're on the right track</li>
+      <li><span class="tile gray"><span class="tile-icon" aria-hidden="true">·</span></span> Not part of the puzzle</li>
+    </ul>
+    <p>A new puzzle every day.</p>
+    <p class="tutorial-link"><a id="tutorial-link" href="../tutorial/1.html">Try the tutorial</a></p>
+  </dialog>
+
+  <script id="puzzle" type="application/json">{"date":"2026-10-27","clue":"Portend chef","fn":[[],[],[]],"salt":"2026-10-27","answer":[["afab262e3daa6a428fb6b4cb87f66519f1002626119f216b10c939adfdc76d9b"],["35056f7d361927b66526703144f80a8b5b5d1f732749a0ab07e228b1f0bb599d"]],"mid":[["00bc37e936c440c3e74585b8d994244d70033303d1b3664adc3ebbf21a6d88f9"],["1d8c0fd555b36e7bca77b3384b1f133811f2e63a731708201b39c8c45037b52e"]],"hint":"Sorry, no hint for this one. We want to keep the answer a secret.","par":3,"root":"../"}</script>
+  <!--TUTORIAL_SCRIPT-->
+  <script src="../assets/game.js?v=46b94efa"></script>
+</body>
+</html>
